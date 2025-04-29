@@ -5,8 +5,8 @@ import { API_PATHS } from "../utils/apiPaths";
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-     const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // New state to track loading
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) return;
@@ -20,7 +20,11 @@ const UserProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
-        setUser(response.data);
+        const userDataWithToken = {
+          ...response.data,
+          token: accessToken, // Attach the token to the user
+        };
+        setUser(userDataWithToken);
       } catch (error) {
         console.error("User not authenticated", error);
         clearUser();
@@ -48,6 +52,6 @@ const UserProvider = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
-}
+};
 
-export default UserProvider
+export default UserProvider;

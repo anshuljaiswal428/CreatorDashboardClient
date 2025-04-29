@@ -1,20 +1,17 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
-import Dashboard from "./pages/Admin/Dashboard";
-import Login from "./pages/Auth/Login";
-import SignUp from "./pages/Auth/SignUp";
-import ManageTasks from "./pages/Admin/ManageTasks";
-import CreateTask from "./pages/Admin/CreateTask";
-import ManageUsers from "./pages/Admin/ManageUsers";
-
-import UserDashboard from "./pages/User/UserDashboard";
-import MyTasks from "./pages/User/MyTasks";
-import ViewTaskDetails from "./pages/User/ViewTaskDetails";
-
-import PrivateRoute from "./routes/PrivateRoute";
+import Login from "./pages/LoginPage";
+import SignUp from "./pages/SignupPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AdminUserManagement from "./pages/AdminUserManagement";
+import UserDashboardPage from "./pages/UserDashboardPage";
 import UserProvider, { UserContext } from "./context/userContext";
 import { Toaster } from "react-hot-toast";
-import Footer from "./components/Footer";
+import Footer from "./components/common/Footer";
+import FeedPage from "./pages/FeedPage";
+import PrivateRoute from "./components/PrivateRoute";
+import SavedPostsPage from "./pages/SavedPostsPage";
+import ManageReport from "./pages/ManageReport";
 
 const App = () => {
   return (
@@ -22,26 +19,27 @@ const App = () => {
       <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <Router>
           <Routes>
+            {/* Redirect root to login */}
+            <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
 
             {/* Admin Routes */}
             <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
-              <Route path="/admin/dashboard" element={<Dashboard />} />
-              <Route path="/admin/tasks" element={<ManageTasks />} />
-              <Route path="/admin/create-task" element={<CreateTask />} />
-              <Route path="/admin/users" element={<ManageUsers />} />
+              <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+              <Route path="/admin/manage-users" element={<AdminUserManagement />} />
+              <Route path="/admin/manage-reports" element={<ManageReport />} />
             </Route>
 
             {/* User Routes */}
-            <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
-              <Route path="/user/dashboard" element={<UserDashboard />} />
-              <Route path="/user/tasks" element={<MyTasks />} />
-              <Route path="/user/task-details/:id" element={<ViewTaskDetails />} />
+            <Route element={<PrivateRoute allowedRoles={["user"]} />}>
+              <Route path="/user/dashboard" element={<UserDashboardPage />} />
+              <Route path="/feed" element={<FeedPage />} />
+              <Route path="/user/saved-posts" element={<SavedPostsPage />} />
             </Route>
 
             {/* Default Route */}
-            <Route path="/" element={<Root />} />
+            {/* <Route path="/" element={<Root />} /> */}
           </Routes>
         </Router>
         <Footer /> {/* ✅ Persistent footer */}
